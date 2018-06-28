@@ -1,0 +1,20 @@
+
+
+html {
+    position: relative;
+    min-height: 100vh !important;    
+  }
+  
+  body {    
+    margin-bottom: 70px !important;
+    min-height: 100%;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;  
+    right: 0;  
+    height: 50px;  
+    text-align: right;
+  }
+  

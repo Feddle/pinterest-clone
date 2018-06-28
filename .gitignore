@@ -1,0 +1,12 @@
+# Packages
+node_modules
+
+# Keys
+.env
+
+# Misc
+.vscode/
+
+
+
+
