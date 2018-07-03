@@ -5,7 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const crypto = require("crypto");
 const User = require("../models/user-model");
 
-const callbackURL = process.env.ENVIRONMENT === "production" ? "https://book-club-feddle.glitch.me/auth/twitter/redirect" : "http://127.0.0.1:51334/auth/github/redirect";
+const callbackURL = process.env.ENVIRONMENT === "production" ? "https://book-club-feddle.glitch.me/auth/twitter/redirect" : "http://127.0.0.1:51335/auth/github/redirect";
 
 passport.serializeUser((user, done) => {
     done(null, user.id);

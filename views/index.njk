@@ -12,15 +12,16 @@
   <link rel="stylesheet" href="/main.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> {% block head %} {% endblock %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">  {% block head %} {% endblock %}
 </head>
 
-<body class="bg-dark">
+<body class="bg-light">
   <div id="content">
 
     <!--NAVBAR-->
-    <div class="container">
-      <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+    <div class="container-fluid p-0">
+      <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-danger">
         <a href="/" class="navbar-brand">Definitely-not-Pinterest</a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navItems">
           <i class="material-icons text-white">menu</i>
@@ -29,10 +30,12 @@
           <ul class="navbar-nav mr-auto"></ul>
           {% if not user %}
           <span>
-            <a href="/auth" class="btn btn-outline-dark">Sign in</a>
+            <a href="/auth" class="btn btn-outline-light">Sign in</a>
           </span>
           {% elif user %}
-          <span class="text-light mr-2">{{ user.username }}</span>
+          <span class="mr-2">
+            <a href="/user/{{ user.link }}" class="text-light">{{ user.username }}</a>
+          </span>
           <span>
             <a href="/auth/signout" class="btn btn-outline-light mr-auto">Sign out</a>
           </span>
@@ -43,12 +46,21 @@
     <!--CONTENT-->
     {% block content %}
     <main class="container-fluid bg-light" id="mainContainer">
-
+      <div class="grid">
+      <div class="grid-sizer"></div>
+        {% for item in items %}
+        <div class="grid-item rounded border">
+          <img src="{{ item.link }}" alt="{{ item.title }}">
+          <h5 class="m-1">{{ item.title }}</h5>  
+          <p><a href="/user/{{ item.owner_link }}">{{ item.owner }}</a></p>        
+        </div>
+        {% endfor %}
+      </div>
     </main>
     {% endblock %}
     <!--FOOTER-->
     <footer class="footer">
-      <div class="container-fluid ml-0 mb-0 text-white">
+      <div class="container-fluid ml-0 mb-0 text-dark">
         <p class="mb-auto">Made by Feddle</p>
         <a href="https://github.com/Feddle">https://github.com/Feddle</a>
       </div>
@@ -61,6 +73,8 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
   {% block scripts %} {% endblock %}
 </body>

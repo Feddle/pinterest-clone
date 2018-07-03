@@ -1,20 +1,58 @@
-
-
 html {
-    position: relative;
-    min-height: 100vh !important;    
-  }
-  
-  body {    
-    margin-bottom: 70px !important;
-    min-height: 100%;
-  }
+  position: relative;
+  min-height: 100vh !important;
+  overflow-y: scroll;
+}
 
-  .footer {
-    position: absolute;
-    bottom: 0;  
-    right: 0;  
-    height: 50px;  
-    text-align: right;
+body {
+  margin-bottom: 70px !important;
+  min-height: 100%;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.footer {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 50px;
+  width: 100%;
+  text-align: right;
+}
+
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+@media (min-width: 576px) {
+  .grid-sizer,
+  .grid-item {
+    width: 100%;
   }
-  
+}
+
+@media (min-width: 768px) {
+  .grid-sizer,
+  .grid-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .grid-sizer,
+  .grid-item {
+    width: 33.333%;
+  }
+}
+
+.grid-item {
+  float: left;
+  margin-bottom: 0.5rem;
+}
+
+.grid-item img {
+  display: block;
+  max-width: 100%;
+}
