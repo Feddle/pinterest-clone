@@ -13,9 +13,11 @@ const authRoutes = require("./routes/auth-routes");
 const User = require("./models/user-model");
 const Pin = require("./models/pin-model");
 const crypto = require("crypto");
+const bodyParser = require("body-parser");
+let validator = require("validator");
 const app = express();
 const url = "mongodb://"+process.env.DB_USER+":"+process.env.DB_PASS+"@"+process.env.DB_HOST+":"+process.env.DB_PORT+"/"+process.env.DB_NAME;
-
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(express.static("public"));
 app.use(cookieParser());
@@ -162,6 +164,29 @@ app.get("/auth", (req, res) => {
     else res.render("sign-in.njk", {message: req.flash("error")});
 });
 
+app.post("/add", authCheck, urlencodedParser, (req, res) => {    
+    let link = req.body.link+"";
+    let title = req.body.title+"";
+    if(!title.length > 0) return res.send("Title cannot be empty, please try again.");
+    if(title.length > 90) return res.send("Title is too long");
+    if(validator.isURL(link)) {
+        new Pin({
+            owner: req.user.username,
+            owner_id: req.user.id,  
+            owner_link: req.user.link,  
+            link,    
+            title
+        }).save((err, pin) => {
+            if(err) return res.send("Error occurred, please check fields and try again.");
+            User.updateOne({_id: req.user.id}, {$push: {image_links: pin.id}}, (err) => {
+                if(err) return res.send("Error occurred, please try again");
+                return res.send(pin);
+            });            
+        });
+    }
+    else return res.send("Please check the image url and try again.");
+});
+
 
 //Default route
 app.get("*", (req, res) => {
@@ -179,5 +204,13 @@ app.use((err, req, res) => {
 const listener = app.listen(process.env.PORT, () => {
     console.log(`Your app is listening on port ${listener.address().port}`);
 });
+
+function authCheck(req, res, next) {
+    if(!req.user){
+        return res.redirect("/auth");
+    } else {
+        return next();
+    }
+}
 
 

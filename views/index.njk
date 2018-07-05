@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">  {% block head %} {% endblock %}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> {% block head %} {% endblock %}
 </head>
 
 <body class="bg-light">
@@ -47,16 +47,60 @@
     {% block content %}
     <main class="container-fluid bg-light" id="mainContainer">
       <div class="grid">
-      <div class="grid-sizer"></div>
+        <div class="grid-sizer"></div>
         {% for item in items %}
         <div class="grid-item rounded border">
-          <img src="{{ item.link }}" alt="{{ item.title }}">
-          <h5 class="m-1">{{ item.title }}</h5>  
-          <p><a href="/user/{{ item.owner_link }}">{{ item.owner }}</a></p>        
+          <img src="{{ item.link }}" alt="{{ item.title }}" onerror="this.onerror=null;this.src='http://via.placeholder.com/300x200?text=Image+missing';">
+          <h5 class="m-1">{{ item.title }}</h5>
+          <p>
+            <a href="/user/{{ item.owner_link }}">{{ item.owner }}</a>
+          </p>
         </div>
         {% endfor %}
       </div>
+      <button type="button" class="btn position-sticky rounded-circle main__button shadow" data-toggle="modal" data-target="#modalAddPin">+</button>
     </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAddPin" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add new Pin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          {% if user %}
+            <form id="form_addPin" method="post" action="/add">
+              <div class="form-group">
+                <label for="input_link" class="col-form-label">Image link</label>
+                <input type="text" class="form-control" id="input_link" name="link" placeholder="ex. myawesomewebsite.com/myawesomeimage.jpg" required>
+              </div>
+              <div class="form-group">
+                <label for="input_title" class="col-form-label">Pin Title</label>
+                <input type="text" class="form-control" id="input_title" maxlength="90" required>
+              </div>
+            </form>                        
+            <div class="d-none modal__status-div">
+              <p class="modal__text--loading">Adding pin, please wait</p>
+              <div class="modal__spinner"></div>
+            </div>
+          </div>
+          <div class="modal-footer">            
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" form="form_addPin" class="btn btn-primary" id="button_addPin">Add Pin</button>
+          </div>
+          {% else %}
+          <p class="text-center">Please sign in to add new pins</p>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
     {% endblock %}
     <!--FOOTER-->
     <footer class="footer">
@@ -75,6 +119,7 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script src="/index.js"></script>
 
   {% block scripts %} {% endblock %}
 </body>
