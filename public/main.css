@@ -83,11 +83,6 @@ body {
   margin: auto;
 }
 
-.modal__text--loading {
-  text-align: center;
-  font-size: 14px;
-}
-
 @keyframes rotation{
   from{
     transform: rotate(0deg);
@@ -96,3 +91,16 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.modal__text--loading {
+  text-align: center;
+  font-size: 14px;
+}
+
+.pin__button {	
+	margin-right: 10px;
+	margin-bottom: 10px;
+	line-height: 1 !important;	
+}
+
+

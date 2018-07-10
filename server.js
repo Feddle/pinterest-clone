@@ -12,7 +12,6 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth-routes");
 const User = require("./models/user-model");
 const Pin = require("./models/pin-model");
-const crypto = require("crypto");
 const bodyParser = require("body-parser");
 let validator = require("validator");
 const app = express();
@@ -53,103 +52,10 @@ app.use("/auth", authRoutes);
 
 mongoose.connect(url, () => {
     console.log("connected to mongodb");   
-    let testPinIds = [
-        "5b3b5c0cb81acf21589e5656",
-        "5b3b5c0cb81acf21589e5658",
-        "5b3b5c0cb81acf21589e565a",
-        "5b3b5c0cb81acf21589e565c",
-        "5b3b5c0cb81acf21589e565e"        
-    ];     
-    let testUserIds= ["5b3b781577dc760ae82039a4", "5b3b781577dc760ae82039a5", "5b3b781577dc760ae82039a6", "5b3b781577dc760ae82039a7", "5b3b781577dc760ae82039a8"];
-    let testUserLinks = [];
-    for(let i = 0; i < testPinIds.length; i++) {
-        testPinIds[i] = mongoose.Types.ObjectId(testPinIds[i]);
-        testUserIds[i] = mongoose.Types.ObjectId(testUserIds[i]);
-        testUserLinks[i] = crypto.randomBytes(3).toString("hex");
-        //console.log(mongoose.Types.ObjectId());
-    }
-    Promise.all([
-        Pin.insertMany(createTestPins(testUserIds, testPinIds, testUserLinks)),
-        User.insertMany(createTestUsers(testUserIds, testPinIds, testUserLinks))
-    ])
-        .then(
-            () => {
-                let extraPinIds = [
-                    "5b3b86f0a68fb726c41cb122",
-                    "5b3b86f0a68fb726c41cb123",
-                    "5b3b86f0a68fb726c41cb124"
-                ];
-                User.updateOne({_id: testUserIds[0]}, { $push: { image_links: { $each: extraPinIds } } }, (err) => {
-                    if(err) console.log("Error creating extra test pins");
-                });
-                console.log("Created test users and pins");
-            },
-            (reason) => {console.log(reason.message);});                 
-    
+    let InitializeTestData = require("./utils/testData.js");
+    InitializeTestData();
 });
 
-function createTestPins(testUserIds, testPinIds, testUserLinks) {
-    let pins = [];
-    let links = [
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-663610.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-662361.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-661881.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-664352.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-666357.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-668354.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-662117.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-662290.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-3208.jpg",
-        "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-23950.jpg"
-        
-    ];
-    let titles = [
-        "I often see the time 11:11 or 12:34 on clocks",
-        "Lets all be unique together",
-        "I am never at home on Sundays",
-        "There was no ice cream in the freezer",
-        "He was not there yesterday",
-        "It was a lovely sight",
-        "I'd rather be a bird than a fish",
-        "I love eating toasted cheese and tuna sandwiches",
-        "The old apple revels in its authority",
-        "Writing a list of random sentences is harder than I initially thought it would be"
-    ];
-
-    for(let i = 0; i < links.length; i++) {
-        let owner = `test${i+1}`;
-        let owner_id = testUserIds[i];
-        let owner_link = testUserLinks[i];
-        if(i >= 5) {
-            owner = "test1";
-            owner_id = testUserIds[0];
-            owner_link = testUserLinks[0];
-        }
-        pins.push({
-            _id: testPinIds[i],
-            owner,
-            owner_id,
-            owner_link,
-            title: titles[i],
-            link: links[i]
-        });
-    }
-    return pins;
-}
-
-function createTestUsers(testUserIds, testPinIds, testUserLinks) {    
-    let users = [];
-    for(let i = 0; i < testUserIds.length; i++) {                 
-        users.push({   
-            _id: testUserIds[i],         
-            username: `test${i+1}`,
-            password: "12345", 
-            link: testUserLinks[i],
-            image_links: [testPinIds[i]]
-        });
-    }    
-    return users;
-}
 
 
 app.get("/", (req, res, next) => {
@@ -170,13 +76,14 @@ app.post("/add", authCheck, urlencodedParser, (req, res) => {
     if(!title.length > 0) return res.send("Title cannot be empty, please try again.");
     if(title.length > 90) return res.send("Title is too long");
     if(validator.isURL(link)) {
+        link = link.match(/https?/gm) ? link : "https://" + link;        
         new Pin({
             owner: req.user.username,
             owner_id: req.user.id,  
             owner_link: req.user.link,  
             link,    
             title
-        }).save((err, pin) => {
+        }).save((err, pin) => {            
             if(err) return res.send("Error occurred, please check fields and try again.");
             User.updateOne({_id: req.user.id}, {$push: {image_links: pin.id}}, (err) => {
                 if(err) return res.send("Error occurred, please try again");
@@ -185,6 +92,37 @@ app.post("/add", authCheck, urlencodedParser, (req, res) => {
         });
     }
     else return res.send("Please check the image url and try again.");
+});
+
+app.post("/remove", authCheck, urlencodedParser, (req, res, next) => {
+    let pin_id = req.body.pin_id;
+    let isOwn = false;
+    req.user.image_links.forEach(e => {if(e == pin_id) isOwn = true;return;});
+    if(!isOwn) return res.send("Auth error");
+
+    //Not good if operation partially succeeds
+    Promise.all([
+        Pin.deleteOne({_id: pin_id}),
+        User.updateOne({_id: req.user.id}, {$pull: {image_links: pin_id}})
+    ])
+        .then(() => {return res.redirect("/");})
+        .catch((e) => next(e));
+});
+
+app.get("/user/:link", (req, res, next) => {
+    let username;
+    User.findOne({link: req.params.link})
+        .then((user) => {
+            username = user.username;
+            let pins = user.image_links;            
+            return Pin.find({_id: {$in: pins}});
+        })
+        .then((pins) => {            
+            res.render("index.njk", {user: req.user, items: pins, username});
+        })
+        .catch((err) => {
+            next(err);
+        });
 });
 
 

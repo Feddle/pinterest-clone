@@ -1,3 +1,4 @@
+let page = 0;
 
 let $grid = $(".grid").masonry({
     itemSelector: ".grid-item",
@@ -11,8 +12,31 @@ $grid.imagesLoaded().progress(() => {
 });
 
 $(() => {       
-    $("form").on("submit", handleAddPin);
+    $("#form_addPin").on("submit", handleAddPin);
+    $(".main__button--up").on("click", () => {$(window).scrollTop(0);}); 
+    /*$(window).on("scroll", () => {
+        let element = document.body;
+        if(element.scrollHeight - element.scrollTop === element.clientHeight)
+            loadMoreImages();
+    });*/
+    //$("[data-tooltip=\"tooltip\"]").tooltip();   
 });
+
+function loadMoreImages() {
+    $.ajax({
+        url: "/more",
+        method: "get",
+        data: {page},            
+        success: (d) => {            
+            addPinsToWall(d);
+            page++;
+        }
+    });
+}
+
+function addPinsToWall(pins) {
+    let pin = ""; //Server should propably create the html so remove button is correctly rendered(?)
+}
 
 
 function handleAddPin(event) {   
