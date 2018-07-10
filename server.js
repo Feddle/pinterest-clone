@@ -50,7 +50,7 @@ if(process.env.ENVIRONMENT === "production") {
 //Routes
 app.use("/auth", authRoutes);
 
-mongoose.connect(url, () => {
+mongoose.connect(url, {useNewUrlParser: true}, () => {
     console.log("connected to mongodb");   
     let InitializeTestData = require("./utils/testData.js");
     InitializeTestData();
