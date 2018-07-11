@@ -3,10 +3,10 @@ let helmetSetup = {
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "https://fonts.googleapis.com", "https://stackpath.bootstrapcdn.com", "https://cdnjs.cloudflare.com"],
+            styleSrc: ["'self'", "https://fonts.googleapis.com", "https://stackpath.bootstrapcdn.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            imgSrc: ["'self'", "http://books.google.com", "https://via.placeholder.com"],
-            scriptSrc: ["'self'", "https://code.jquery.com", "https://cdnjs.cloudflare.com", "https://stackpath.bootstrapcdn.com", "https://unpkg.com"],
+            imgSrc: ["'self'", "https://via.placeholder.com"],
+            scriptSrc: ["'self'", "'sha256-axzDWsWa47eO+POm0sdeB+DK8bfvtCT7FE/oiVmvrrU='", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://unpkg.com"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: true,
         }
