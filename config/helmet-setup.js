@@ -5,8 +5,8 @@ let helmetSetup = {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "https://fonts.googleapis.com", "https://stackpath.bootstrapcdn.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            imgSrc: ["'self'", "https://via.placeholder.com"],
-            scriptSrc: ["'self'", "'sha256-axzDWsWa47eO+POm0sdeB+DK8bfvtCT7FE/oiVmvrrU='", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://unpkg.com"],
+            imgSrc: ["'self'", "https://via.placeholder.com", "*"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://unpkg.com"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: true,
         }
