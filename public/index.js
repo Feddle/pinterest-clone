@@ -7,13 +7,23 @@ let $grid = $(".grid").masonry({
     //gutter: 10
 });
 // layout Masonry after each image loads
-$grid.imagesLoaded().progress(() => {
-    $grid.masonry("layout");
+$grid.imagesLoaded().progress((instance, image) => {
+    if(!image.isLoaded) {
+        image.img.onload = () => $grid.masonry("layout"); 
+        image.img.src = "https://via.placeholder.com/300x200?text=Image+missing";
+    }
+    $grid.masonry("layout");     
 });
 
-$(() => {       
+$grid.imagesLoaded().always(() => {
+    $grid.masonry("layout"); 
+});
+
+
+$(function() {       
     $("#form_addPin").on("submit", handleAddPin);
-    $(".main__button--up").on("click", () => {$(window).scrollTop(0);}); 
+    $(".main__button--up").on("click", () => {$(window).scrollTop(0);});        
+     
     /*$(window).on("scroll", () => {
         let element = document.body;
         if(element.scrollHeight - element.scrollTop === element.clientHeight)
