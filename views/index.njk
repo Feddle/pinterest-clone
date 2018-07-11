@@ -53,23 +53,25 @@
         <div class="grid-sizer"></div>
         {% for item in items %}
         <div class="grid-item rounded border">
-          <img src="{{ item.link }}" alt="{{ item.title }}" onerror="this.onerror=null;this.src='http://via.placeholder.com/300x200?text=Image+missing';">
-          <h5 class="m-1">{{ item.title }}</h5>          
-          <a href="/user/{{ item.owner_link }}">{{ item.owner }}</a>          
+          <img src="{{ item.link }}" alt="{{ item.title }}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+missing';">
+          <h5 class="m-1">{{ item.title }}</h5>
+          <a href="/user/{{ item.owner_link }}">{{ item.owner }}</a>
           {% if item.owner === user.username %}
           <form method="post" action="/remove">
-          <input type="hidden" name="pin_id" value="{{ item.id }}">
-          <button class="btn btn-light float-right pin__button" type="submit" data-id="">Remove</button>
+            <input type="hidden" name="pin_id" value="{{ item.id }}">
+            <button class="btn btn-light float-right pin__button" type="submit" data-id="">Remove</button>
           </form>
           {% endif %}
         </div>
         {% endfor %}
       </div>
-      <button type="button" class="btn position-sticky rounded-circle main__button shadow" data-toggle="modal" data-tooltip="tooltip" data-placement="top" title="Add pin" data-target="#modalAddPin">
-      +
+      <button type="button" class="btn position-sticky rounded-circle main__button shadow" data-toggle="modal" data-tooltip="tooltip"
+        data-placement="top" title="Add pin" data-target="#modalAddPin">
+        +
       </button>
-      <button type="button" class="btn position-sticky rounded-circle main__button main__button--up shadow float-right" data-tooltip="tooltip" data-placement="top" title="Scroll to top">
-      <i class="material-icons">keyboard_arrow_up</i>
+      <button type="button" class="btn position-sticky rounded-circle main__button main__button--up shadow float-right" data-tooltip="tooltip"
+        data-placement="top" title="Scroll to top">
+        <i class="material-icons">keyboard_arrow_up</i>
       </button>
     </main>
 
@@ -128,7 +130,7 @@
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+  <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
