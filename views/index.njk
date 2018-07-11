@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> {% block head %} {% endblock %}
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+   {% block head %} {% endblock %}
 </head>
 
 <body class="bg-light">
@@ -53,7 +54,7 @@
         <div class="grid-sizer"></div>
         {% for item in items %}
         <div class="grid-item rounded border">
-          <img src="{{ item.link }}" alt="{{ item.title }}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+missing';">
+          <img src="{{ item.link }}" alt="{{ item.title }}" >
           <h5 class="m-1">{{ item.title }}</h5>
           <a href="/user/{{ item.owner_link }}">{{ item.owner }}</a>
           {% if item.owner === user.username %}
