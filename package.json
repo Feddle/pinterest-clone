@@ -1,6 +1,6 @@
 {
   "name": "pinterest-clone",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "FCC Pinterest clone made by Feddle",
   "main": "server.js",
   "scripts": {
