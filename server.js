@@ -1,6 +1,5 @@
 
 require("dotenv").config();
-//const {createTestUsers} = require("./utils/utilFunc");
 const express = require("express");
 const nunjucks = require("nunjucks");
 const helmet = require("helmet");
@@ -65,10 +64,6 @@ app.get("/", (req, res, next) => {
     });    
 });
 
-app.get("/auth", (req, res) => {
-    if(req.user) res.redirect("/");
-    else res.render("sign-in.njk", {message: req.flash("error")});
-});
 
 app.post("/add", authCheck, urlencodedParser, (req, res) => {    
     let link = req.body.link+"";
