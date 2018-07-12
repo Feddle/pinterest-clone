@@ -26,24 +26,27 @@ nunjucks.configure("views", {
     express: app
 });
 
-app.use(cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-    secure: process.env.ENVIRONMENT === "production" ? true : false,
-    sameSite: "lax"
-}));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 //Configure TLS if production
 if(process.env.ENVIRONMENT === "production") {
+    app.set("trust proxy", 1);
     app.use(helmet(require("./config/helmet-setup")));  
     app.all("*", (req, res, next) => {
         if(req.get("X-Forwarded-Proto").indexOf("https") != -1) return next();
         else res.redirect("https://" + req.hostname + req.url);
     });
 }
+
+app.use(cookieSession({
+    proxy: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY],
+    secure: process.env.ENVIRONMENT === "production" ? true : false,
+    sameSite: "lax"
+}));
 
 
 //Routes
